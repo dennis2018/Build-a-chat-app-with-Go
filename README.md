@@ -89,4 +89,6 @@ Run the following code in the terminal to pull in the Go Pusher package:
         log.Fatal(http.ListenAndServe(":8090", nil))
     }
     
-    ``` 
+``` 
+
+⚠️ Replace PUSHER_APP_* keys with the app credentials found on your Pusher dashboard.
