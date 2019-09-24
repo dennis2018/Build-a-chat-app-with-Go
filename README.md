@@ -31,3 +31,14 @@ We need to enable the Pusher application to trigger events from the client-side 
 ![Image description](https://images.ctfassets.net/1es3ne0caaid/r2p5Sr6hLq4eeWMoII8YE/78f08355870ee274ed621530d5fd9f16/chat-app-go-enable-client-events.png)
 
 - Click on the Update button.
+
+## Setting up the codebase
+
+et’s write the terminal commands to create a new folder in the src directory that is located in the $GOPATH, this folder will be the root directory for this project:
+
+```
+$ cd $GOPATH/src
+    $ mkdir go-pusher-chat-app
+    $ cd go-pusher-chat-app
+```
+
