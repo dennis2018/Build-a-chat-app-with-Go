@@ -103,4 +103,48 @@ Lastly, in the main function, we registered three endpoints:
 - /new/user — creates a new user.
 - /pusher/auth — authorizes users from the client-side so they can subscribe to private channels and trigger client events.
 
+Each of the last two endpoints has an associated handler function that we will define below. Add the following code to the chat.go file before the main function:
 
+``` 
+    // File: ./chat.go
+
+    // [...]
+
+    func registerNewUser(rw http.ResponseWriter, req *http.Request) {
+        body, err := ioutil.ReadAll(req.Body)
+        if err != nil {
+            panic(err)
+        }
+
+        var newUser user
+
+        err = json.Unmarshal(body, &newUser)
+        if err != nil {
+            panic(err)
+        }
+
+        client.Trigger("update", "new-user", newUser)
+
+        json.NewEncoder(rw).Encode(newUser)
+    }
+
+    func pusherAuth(res http.ResponseWriter, req *http.Request) {
+        params, _ := ioutil.ReadAll(req.Body)
+        response, err := client.AuthenticatePrivateChannel(params)
+        if err != nil {
+            panic(err)
+        }
+
+        fmt.Fprintf(res, string(response))
+    }
+
+    // [...]
+``` 
+
+In the registerNewUser function, we trigger a Pusher event, new-user, on the public channel update, so that the new user’s details are sent to the subscribed clients.
+
+The syntax for triggering a Pusher event over a public channel in Go is:
+
+``` 
+ client.Trigger(channel, event, data)
+ ``` 
