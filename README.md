@@ -29,3 +29,5 @@ We need to enable the Pusher application to trigger events from the client-side 
 - Check the Enable client events option. 
 
 ![Image description](https://images.ctfassets.net/1es3ne0caaid/r2p5Sr6hLq4eeWMoII8YE/78f08355870ee274ed621530d5fd9f16/chat-app-go-enable-client-events.png)
+
+- Click on the Update button.
