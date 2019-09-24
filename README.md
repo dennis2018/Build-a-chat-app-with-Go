@@ -465,4 +465,4 @@ To see the app in action, we will visit this address, http://127.0.0.1:8090, on 
 
 Here’s a demo of the chat app:
 
-[image describtion](https://images.ctfassets.net/1es3ne0caaid/4VfVpdecD6ackgA08yAwkc/7150bd3d5e452232f7b8839c13c342ed/go-chat-app-demo.gif)
+![Image description](https://images.ctfassets.net/1es3ne0caaid/4VfVpdecD6ackgA08yAwkc/7150bd3d5e452232f7b8839c13c342ed/go-chat-app-demo.gif)
