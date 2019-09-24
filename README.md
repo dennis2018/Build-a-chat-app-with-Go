@@ -300,3 +300,169 @@ Above we have the HTML for the home page. Let’s add some styling. Create a new
         display: none;
     }
 ```
+
+Next, let’s write the JavaScript for the application. Create a new app.js file in the public/js directory and add the following code:
+
+```
+// File: ./public/js/app.js
+    (function () {
+        var pusher = new Pusher('PUSHER_APP_KEY', {
+            authEndpoint: '/pusher/auth',
+            cluster: 'PUSHER_APP_CLUSTER',
+            encrypted: true
+        });
+
+        let chat = {
+            name: undefined,
+            email: undefined,
+            endUserName: undefined,
+            currentRoom: undefined,
+            currentChannel: undefined,
+            subscribedChannels: [],
+            subscribedUsers: []
+        }
+
+        var publicChannel = pusher.subscribe('update');
+
+        const chatBody = $(document)
+        const chatRoomsList = $('#rooms')
+        const chatReplyMessage = $('#replyMessage')
+
+        const helpers = {
+            clearChatMessages: () => {
+                $('#chat-msgs').html('')
+            },
+
+            displayChatMessage: (message) => {
+                if (message.email === chat.email) {
+                    $('#chat-msgs').prepend(
+                        `<tr>
+                            <td>
+                                <div class="sender">${message.sender} @ <span class="date">${message.createdAt}</span></div>
+                                <div class="message">${message.text}</div>
+                            </td>
+                        </tr>`
+                    )
+                }
+            },
+
+            loadChatRoom: evt => {
+                chat.currentRoom = evt.target.dataset.roomId
+                chat.currentChannel = evt.target.dataset.channelId
+                chat.endUserName =  evt.target.dataset.userName
+                if (chat.currentRoom !== undefined) {
+                    $('.response').show()
+                    $('#room-title').text('Write a message to ' + evt.target.dataset.userName+ '.')
+                }
+
+                evt.preventDefault()
+                helpers.clearChatMessages()
+            },
+
+            replyMessage: evt => {
+                evt.preventDefault()
+
+                let createdAt = new Date().toLocaleString()            
+                let message = $('#replyMessage input').val().trim()
+                let event = 'client-' + chat.currentRoom
+
+                chat.subscribedChannels[chat.currentChannel].trigger(event, {
+                    'sender': chat.name,
+                    'email': chat.currentRoom,
+                    'text': message, 
+                    'createdAt': createdAt 
+                });
+
+                $('#chat-msgs').prepend(
+                    `<tr>
+                        <td>
+                            <div class="sender">
+                                ${chat.name} @ <span class="date">${createdAt}</span>
+                            </div>
+                            <div class="message">${message}</div>
+                        </td>
+                    </tr>`
+                )
+
+                $('#replyMessage input').val('')
+            },
+
+            LogIntoChatSession: function (evt) {
+                const name  = $('#fullname').val().trim()
+                const email = $('#email').val().trim().toLowerCase()
+
+                chat.name = name;
+                chat.email = email;
+
+                chatBody.find('#loginScreenForm input, #loginScreenForm button').attr('disabled', true)
+
+                let validName = (name !== '' && name.length >= 3)
+                let validEmail = (email !== '' && email.length >= 5)
+
+                if (validName && validEmail) {
+                    axios.post('/new/user', {name, email}).then(res => {
+                        chatBody.find('#registerScreen').css("display", "none");
+                        chatBody.find('#main').css("display", "block");
+
+                        chat.myChannel = pusher.subscribe('private-' + res.data.email)
+                        chat.myChannel.bind('client-' + chat.email, data => {
+                            helpers.displayChatMessage(data)
+                        })
+                    })
+                } else {
+                    alert('Enter a valid name and email.')
+                }
+
+                evt.preventDefault()
+            }
+        }
+
+
+        publicChannel.bind('new-user', function(data) {
+            if (data.email != chat.email){
+                chat.subscribedChannels.push(pusher.subscribe('private-' + data.email));
+                chat.subscribedUsers.push(data);
+
+                $('#rooms').html("");
+
+                chat.subscribedUsers.forEach((user, index) => {
+                    $('#rooms').append(
+                        `<li class="nav-item"><a data-room-id="${user.email}" data-user-name="${user.name}" data-channel-id="${index}" class="nav-link" href="#">${user.name}</a></li>`
+                    )
+                })
+            }
+        })
+
+        chatReplyMessage.on('submit', helpers.replyMessage)
+        chatRoomsList.on('click', 'li', helpers.loadChatRoom)
+        chatBody.find('#loginScreenForm').on('submit', helpers.LogIntoChatSession)
+    }());
+    
+```
+In the script above, we instantiated the Pusher object (replace the PUSHER_APP_* keys with the credentials on your Pusher dashboard).
+
+Next, we define some helper methods that will help us interact with the chat window and with the backend API. Some of the methods defined in the helpers object are:
+
+- ```clearChatMessages``` - clears the chat message window.
+- ```displayChatMessage``` - displays a new chat message in the current window.
+- ```loadChatRoom``` - shows a users chat messages in the general chat window after a room is selected.
+- ```replyMessage``` - sends a chat message to the current room.
+- ```LogIntoChatSession``` - creates a new chat session.
+
+After defining the helpers object, we bind to the new-user event on the publicChannel. In the callback, we subscribe to private channels so the communication is secure.
+
+At the bottom of the script, we register all the event listeners and start the chat session.
+
+## Running the application
+
+To test the chat app, we can start the Go backend server with this command:
+
+```
+$ go run chat.go
+```
+
+To see the app in action, we will visit this address, http://127.0.0.1:8090, on a web browser in multiple windows and test the instant messaging features.
+
+Here’s a demo of the chat app:
+
+[image describtion](https://images.ctfassets.net/1es3ne0caaid/4VfVpdecD6ackgA08yAwkc/7150bd3d5e452232f7b8839c13c342ed/go-chat-app-demo.gif)
