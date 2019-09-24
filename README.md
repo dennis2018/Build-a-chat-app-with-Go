@@ -148,3 +148,11 @@ The syntax for triggering a Pusher event over a public channel in Go is:
 ``` 
  client.Trigger(channel, event, data)
  ``` 
+
+## Building the frontend
+
+Let’s create the public folder in the root directory of our project because this is where all of the static files will live:
+
+ ``` 
+   $  ``` 
+ ``` 
