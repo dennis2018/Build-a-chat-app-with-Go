@@ -19,3 +19,13 @@ You will need the following:
 ## Setting up Pusher
 
 The realtime feature of this chat app will depend on Pusher Channels so you need to create an account [here](https://dashboard.pusher.com/accounts/sign_up) if you don’t already have one. After signing up, you will be asked to create a new application. Do so
+
+## Enabling client events
+
+We need to enable the Pusher application to trigger events from the client-side (browser) of the chat app. This is important because it is with this feature that users will be able to send private messages without hitting the backend server. Follow the steps below to activate client events from the [dashboard](https://dashboard.pusher.com/):
+
+- Select the Channel application.
+- Click on App Setting from the horizontal options list.
+- Check the Enable client events option. 
+
+![Image description](https://images.ctfassets.net/1es3ne0caaid/r2p5Sr6hLq4eeWMoII8YE/78f08355870ee274ed621530d5fd9f16/chat-app-go-enable-client-events.png)
