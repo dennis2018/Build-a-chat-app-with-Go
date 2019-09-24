@@ -45,3 +45,48 @@ $ cd $GOPATH/src
 In this folder, we will create the main Go file which will be the entry point for the application and call it chat.go. We also need to install the Go Pusher library that we will reference in the chat.go file.
 
 Run the following code in the terminal to pull in the Go Pusher package:
+
+```
+  $ go get github.com/pusher/pusher-http-go
+  
+  ```
+  
+  Open the chat.go file in your IDE and paste the following code:
+  
+   ```
+   // File: ./chat.go
+    package main
+
+    import (
+        "encoding/json"
+        "fmt"
+        "io/ioutil"
+        "log"
+        "net/http"
+
+        pusher "github.com/pusher/pusher-http-go"
+    )
+
+    var client = pusher.Client{
+        AppId:   "PUSHER_APP_ID",
+        Key:     "PUSHER_APP_KEY",
+        Secret:  "PUSHER_APP_SECRET",
+        Cluster: "PUSHER_APP_CLUSTER",
+        Secure:  true,
+    }
+
+    type user struct {
+        Name  string `json:"name" xml:"name" form:"name" query:"name"`
+        Email string `json:"email" xml:"email" form:"email" query:"email"`
+    }
+
+    func main() {
+        http.Handle("/", http.FileServer(http.Dir("./public")))
+
+        http.HandleFunc("/new/user", registerNewUser)
+        http.HandleFunc("/pusher/auth", pusherAuth)
+
+        log.Fatal(http.ListenAndServe(":8090", nil))
+    }
+    
+    ``` 
