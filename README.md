@@ -92,3 +92,15 @@ Run the following code in the terminal to pull in the Go Pusher package:
 ``` 
 
 ⚠️ Replace PUSHER_APP_* keys with the app credentials found on your Pusher dashboard.
+
+In the code above, we first imported a list of packages then registered a new Pusher client with the credentials from the app we created earlier on the dashboard.
+
+Next, we defined a user struct and included extra definitions to its properties so that Go knows how to handle incoming payloads and bind their various structures with a new instance of the user struct.
+
+Lastly, in the main function, we registered three endpoints:
+
+- / — returns the static files that define the view of the chat app. The static files will be served from a public directory.
+- /new/user — creates a new user.
+- /pusher/auth — authorizes users from the client-side so they can subscribe to private channels and trigger client events.
+
+
