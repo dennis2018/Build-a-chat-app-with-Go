@@ -154,5 +154,13 @@ The syntax for triggering a Pusher event over a public channel in Go is:
 Let’s create the public folder in the root directory of our project because this is where all of the static files will live:
 
  ``` 
-   $  ``` 
+ $ mkdir public
  ``` 
+
+Next, we will navigate into the public folder and create two sub-folders to hold our CSS and JavaScript files:
+
+ ```
+$ cd public
+    $ mkdir css js
+ ```
+ 
