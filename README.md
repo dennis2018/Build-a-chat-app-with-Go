@@ -34,7 +34,7 @@ We need to enable the Pusher application to trigger events from the client-side 
 
 ## Setting up the codebase
 
-et’s write the terminal commands to create a new folder in the src directory that is located in the $GOPATH, this folder will be the root directory for this project:
+Let’s write the terminal commands to create a new folder in the src directory that is located in the $GOPATH, this folder will be the root directory for this project:
 
 ```
 $ cd $GOPATH/src
@@ -42,3 +42,6 @@ $ cd $GOPATH/src
     $ cd go-pusher-chat-app
 ```
 
+In this folder, we will create the main Go file which will be the entry point for the application and call it chat.go. We also need to install the Go Pusher library that we will reference in the chat.go file.
+
+Run the following code in the terminal to pull in the Go Pusher package:
